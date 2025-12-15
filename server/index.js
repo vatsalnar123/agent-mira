@@ -243,22 +243,28 @@ app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   
   if (!email || !password) {
-    return res.status(400).json({ success: false, error: 'Email and password are required' });
+    return res.status(400).json({ success: false, error: 'Email/username and password are required' });
   }
   
-  const cleanEmail = email.toLowerCase().trim();
+  const cleanInput = email.toLowerCase().trim();
   
   try {
-    const user = await User.findOne({ email: cleanEmail });
+    // Allow login with either email OR username
+    const user = await User.findOne({
+      $or: [
+        { email: cleanInput },
+        { username: cleanInput }
+      ]
+    });
     
     if (!user) {
-      return res.status(401).json({ success: false, error: 'Invalid email or password' });
+      return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
     
     const isMatch = await user.comparePassword(password);
     
     if (!isMatch) {
-      return res.status(401).json({ success: false, error: 'Invalid email or password' });
+      return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
     
     res.json({ 
