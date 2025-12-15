@@ -1,0 +1,21 @@
+{
+  "name": "agent-mira",
+  "version": "1.0.0",
+  "description": "MiraEstates - Real Estate Chatbot with Gemini AI",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "server": "cd server && npm start",
+    "client": "cd client && npm run dev",
+    "install-server": "cd server && npm install",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "cd server && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["real-estate", "chatbot", "gemini", "ai"],
+  "author": "Vatsal Narula",
+  "license": "MIT"
+}
+
