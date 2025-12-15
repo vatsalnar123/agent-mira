@@ -95,27 +95,7 @@ The search bar implements intelligent parsing:
 - Login supports both email AND username
 - Protected routes redirect unauthenticated users
 
-## 🧗 Challenges & Solutions
 
-### Challenge 1: AI Model Availability
-**Problem**: Initial Gemini model IDs returned 404 errors.  
-**Solution**: Iterated through model versions (gemini-pro → gemini-1.5-flash → gemini-3-pro-preview) and implemented graceful fallback to regex-based parsing.
-
-### Challenge 2: MongoDB Connection from Heroku
-**Problem**: MongoDB showed "disconnected" despite correct credentials.  
-**Solution**: Added `0.0.0.0/0` to MongoDB Atlas Network Access to allow Heroku's dynamic IPs.
-
-### Challenge 3: Credential Security
-**Problem**: Accidentally exposed database credentials in git history.  
-**Solution**: Removed hardcoded credentials, implemented proper `.env` handling, and purged git history. All secrets now loaded from environment variables only.
-
-### Challenge 4: Real-Time Search Performance
-**Problem**: Needed instant filtering without excessive re-renders.  
-**Solution**: Used React's `useState` with debounced filtering and memoized property lists.
-
-### Challenge 5: Responsive Chat Widget
-**Problem**: Chat input caused full component re-renders, causing blinking.  
-**Solution**: Converted functional component to JSX variable to prevent unnecessary remounts.
 
 ## 🔧 Local Development
 
