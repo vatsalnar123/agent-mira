@@ -29,6 +29,17 @@ app.use(express.json());
 const properties = loadData();
 console.log(`Loaded ${properties.length} properties`);
 
+// Health check route
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Agent Mira API is running',
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    ai: model ? 'enabled' : 'disabled',
+    properties: properties.length
+  });
+});
+
 // MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI;
 if (!MONGO_URI) {
