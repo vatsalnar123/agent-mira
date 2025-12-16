@@ -137,20 +137,11 @@ The search bar implements intelligent parsing:
 ### 1. Multi-Step Prompt Handling
 The chat required two separate AI calls per user message - first to extract filters (location, price, bedrooms) as JSON, then to generate a conversational response. Coordinating these sequential calls while maintaining conversation context required passing chat history to both prompts.
 
-### 2. AI Response Parsing
-Gemini sometimes returned malformed JSON or hallucinated filters not present in the user's query. Built a regex fallback system that activates when AI parsing fails, ensuring the search still works even with unpredictable AI outputs.
+### 2. Data Merging from Multiple Sources
+Property data was split across three JSON files (basics, characteristics, images). Created a merge utility that joins records by ID and handles missing data with defaults.
 
-### 3. Data Merging from Multiple Sources
-Property data was split across three JSON files (basics, characteristics, images). Created a merge utility that joins records by ID and handles missing data gracefully with defaults.
-
-### 4. SPA Routing on GitHub Pages
+### 3. SPA Routing on GitHub Pages
 GitHub Pages doesn't support client-side routing - refreshing any route except `/` returns 404. Added a `404.html` redirect hack that preserves the URL path.
 
-### 5. Mongoose Async Hooks
-Password hashing with bcrypt in Mongoose pre-save hooks failed silently due to mixing callback and async/await patterns. Fixed by using pure async functions without the `next()` callback.
-
-### 6. Filter State Synchronization
+### 4. Filter State Synchronization
 Three different inputs (search bar, dropdowns, AI chat) all modify which properties display. Designed state management so these don't conflict - chat filters update the search bar, dropdowns stack on top.
-
-### 7. Context-Aware AI Responses
-Initial AI responses said "see below" when properties actually appear in the main grid. Added UI context to the prompt so responses reference the correct location of filtered results.
