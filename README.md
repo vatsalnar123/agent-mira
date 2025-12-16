@@ -134,29 +134,26 @@ The search bar implements intelligent parsing:
 
 ## 😤 Challenges Faced
 
-### 1. Integrating Google Gemini API
-Getting the Gemini API to work was tricky. Initially, I struggled with finding the correct model name since documentation was scattered. I tried `gemini-pro`, `gemini-1.5-flash`, and several others before finally getting `gemini-3-pro-preview` to work correctly. The API kept returning 404 errors until I found the right model identifier.
+### 1. Crafting Effective AI Prompts
+The biggest challenge was figuring out how to prompt Gemini to extract structured data from messy user input. Getting the AI to return clean JSON with location, price, and bedroom filters took a lot of trial and error. I had to be very specific in my prompts about the expected output format, and even then the AI would sometimes return unexpected responses that broke my parsing logic.
 
-### 2. AI Understanding Natural Language
-Making the AI understand various ways users might phrase their queries was challenging. Users could type "3 beds", "3br", "3 bedroom", "3bhk" - all meaning the same thing. I had to implement flexible regex patterns alongside the AI extraction to handle edge cases. Sometimes the AI would miss filters, so I built a fallback system that uses regex when AI fails.
+### 2. Handling AI Failures Gracefully
+The AI doesn't always return what you expect. Sometimes it would hallucinate filters that weren't in the user's message, or miss obvious ones. I had to build a fallback system using regex that kicks in when the AI response can't be parsed. This taught me that you can't fully trust AI outputs - always have a backup plan.
 
-### 3. Maintaining Chat Context
-When users asked follow-up questions like "yes, show me those", the AI initially had no idea what "those" referred to. I had to implement conversation history tracking, sending the last few messages to Gemini so it could understand context. This required careful state management between frontend and backend.
+### 3. Merging Data from Multiple JSON Sources
+The property data was split across three separate JSON files (basics, characteristics, images). Writing the merge logic to join them by ID while handling missing records was tricky. I had to decide what to do when an image was missing or when characteristics didn't match - do I show the property with placeholder data or hide it entirely?
 
-### 4. MongoDB Connection Issues
-Setting up MongoDB Atlas had its hiccups. I faced connection refused errors when running locally, and had to troubleshoot IP whitelist settings and connection string formats. Getting the authentication flow right with password hashing took several iterations.
+### 4. SPA Routing on GitHub Pages
+This one frustrated me for hours. My React app worked perfectly locally, but after deploying to GitHub Pages, refreshing any page except the homepage gave a 404 error. Turns out GitHub Pages doesn't support client-side routing out of the box. I had to add a `404.html` hack that redirects back to `index.html` with the route preserved in the URL.
 
-### 5. Deployment Headaches
-Deploying to GitHub Pages and Heroku presented different challenges:
-- **GitHub Pages**: SPA routing broke on refresh (404 errors). I had to add a custom `404.html` with redirect logic.
-- **Heroku**: Environment variables needed careful configuration. I accidentally pushed credentials at one point and had to reset everything.
-- **CORS**: Getting the frontend and backend to communicate across different domains required proper CORS setup.
+### 5. CORS Configuration
+Getting the frontend (GitHub Pages) to talk to the backend (Heroku) was a headache. Every API call failed with CORS errors until I properly configured the Express CORS middleware. I learned the hard way that you need to handle preflight OPTIONS requests and set the right headers for credentials.
 
-### 6. Making the Search Bar Smart
-I wanted users to type natural queries like "3 bedroom in Miami under 500k" in the search bar (not just chat). Parsing this reliably was harder than expected. Price could be "$500k", "500000", "500 thousand", or "half a million". I built a flexible parser but still had edge cases that didn't work perfectly.
+### 6. Password Hashing with Mongoose Hooks
+Implementing bcrypt password hashing seemed simple until I hit async/await issues with Mongoose pre-save hooks. The hook kept failing silently because I was mixing callback syntax with async functions. Took me a while to realize Mongoose hooks have specific patterns for async operations.
 
-### 7. Responsive Design Struggles
-Making the UI work on all screen sizes was time-consuming. Elements would overlap, buttons would disappear off-screen, and the chat widget needed different positioning on mobile. I spent significant time on CSS media queries to get it right.
+### 7. State Management for Real-Time Filtering
+Syncing the search bar, dropdown filters, and AI chat filters was complex. All three could modify which properties are displayed, and they needed to work together without conflicting. I had to carefully design the state flow so that typing in the search bar wouldn't reset dropdown selections and vice versa.
 
-### 8. Property Comparison Persistence
-Initially, I stored the comparison list in localStorage, which meant it would be lost if users switched devices. Migrating this to MongoDB required adding user authentication first, then updating all the API calls to include the username parameter.
+### 8. Making the Chat Feel Natural
+The initial chat responses were robotic and didn't match the UI context. The AI would say "see below" when properties actually appear in the main grid, not below the chat. I had to add specific instructions in the prompt explaining the UI layout so the AI's responses made sense to users.
