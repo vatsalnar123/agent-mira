@@ -563,7 +563,7 @@ function App() {
                   )}
                 </div>
                 <div className="property-content">
-                  <div className="property-price">${property.price?.toLocaleString()}</div>
+                  <div className="property-price">${property.price?.toLocaleString('en-US')}</div>
                   <h3 className="property-title">{property.title}</h3>
                   <div className="property-location">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -583,7 +583,7 @@ function App() {
                     </div>
                     <div className="feature">
                       <span className="feature-icon">📐</span>
-                      <span>{property.size_sqft?.toLocaleString()} sqft</span>
+                      <span>{property.size_sqft?.toLocaleString('en-US')} sqft</span>
                     </div>
                   </div>
                   <div className="property-actions">
@@ -693,7 +693,7 @@ function App() {
             <div className="detail-content">
               <div className="detail-header">
                 <h2>{selectedProperty.title}</h2>
-                <div className="detail-price">${selectedProperty.price?.toLocaleString()}</div>
+                <div className="detail-price">${selectedProperty.price?.toLocaleString('en-US')}</div>
               </div>
               
               <div className="detail-location">
@@ -714,7 +714,7 @@ function App() {
                   <span className="spec-label">Bathrooms</span>
                 </div>
                 <div className="detail-spec">
-                  <span className="spec-value">{selectedProperty.size_sqft?.toLocaleString()}</span>
+                  <span className="spec-value">{selectedProperty.size_sqft?.toLocaleString('en-US')}</span>
                   <span className="spec-label">Sq Ft</span>
                 </div>
               </div>

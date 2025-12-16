@@ -13,7 +13,7 @@ const PropertyCard = ({ property, onSave, onCompare, isSelected }) => {
     <div className={`property-card ${isSelected ? 'selected' : ''}`}>
       <div className="property-image">
         <img src={property.image_url} alt={property.title} />
-        <div className="property-price">${property.price.toLocaleString()}</div>
+        <div className="property-price">${property.price.toLocaleString('en-US')}</div>
       </div>
       <div className="property-content">
         <h4>{property.title}</h4>

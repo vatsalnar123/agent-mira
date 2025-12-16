@@ -20,7 +20,7 @@ const ComparisonModal = ({ properties, onClose, onClear, onRemove }) => {
               <img src={p.image_url} alt={p.title} />
               <div className="info">
                 <h4>{p.title}</h4>
-                <div className="price">${p.price?.toLocaleString()}</div>
+                <div className="price">${p.price?.toLocaleString('en-US')}</div>
                 <div className="row">
                   <span className="label">Location</span>
                   <span>{p.location}</span>
