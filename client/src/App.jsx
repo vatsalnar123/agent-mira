@@ -124,7 +124,8 @@ function App() {
       else if (suffix === 'lac' || suffix === 'lakh') price *= 100000;
       else if (price < 10000) price *= 1000;
       
-      parsed.maxPrice = price;
+      // Ensure clean integer (no floating point issues on mobile)
+      parsed.maxPrice = Math.round(price);
       text = text.replace(priceMatch[0], ' ');
     }
     
@@ -392,7 +393,9 @@ function App() {
       if (matchedLocation) setLocationFilter(matchedLocation);
     }
     if (filters.maxPrice) {
-      setPriceFilter(filters.maxPrice.toString());
+      // Ensure price is a clean integer (no floating point issues)
+      const cleanPrice = Math.round(Number(filters.maxPrice));
+      setPriceFilter(cleanPrice.toString());
     }
     if (filters.bedrooms) {
       setBedsFilter(filters.bedrooms.toString());

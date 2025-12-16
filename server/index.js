@@ -152,14 +152,11 @@ const extractFiltersFromText = (text) => {
       } else if (suffix === 'm' || suffix === 'million') {
         amount *= 1000000;
       } else if (amount < 1000) {
-         // Assume 'k' if someone types "500" in context of house prices, 
-         // but strictly speaking 500 is 500. Let's keep it safe:
-         // If it's very small < 1000, likely meant k, but 1 could mean 1 million.
-         // Let's rely on explicit suffixes for now, or existing logic:
-         if (amount < 200) amount *= 1000; // Legacy heuristic
+         if (amount < 200) amount *= 1000;
       }
       
-      filters.maxPrice = amount;
+      // Ensure clean integer (no floating point issues)
+      filters.maxPrice = Math.round(amount);
       break;
     }
   }
