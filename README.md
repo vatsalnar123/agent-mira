@@ -147,4 +147,4 @@ GitHub Pages doesn't support client-side routing - refreshing any route except `
 Three different inputs (search bar, dropdowns, AI chat) all modify which properties display. Designed state management so these don't conflict - chat filters update the search bar, dropdowns stack on top.
 
 ### 5. Cross-Device Number Formatting
-Prices displayed incorrectly on phones set to Indian locale - `$380,000` showed as `$3,80,000` (lakhs format). Fixed by explicitly using `toLocaleString('en-US')` instead of relying on device locale.
+Prices displayed incorrectly on some local devices - `$380,000` showed as `$3,80,000` (lakhs format). Fixed by explicitly using `toLocaleString('en-US')` instead of relying on local devices.
