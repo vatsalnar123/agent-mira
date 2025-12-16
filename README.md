@@ -134,26 +134,23 @@ The search bar implements intelligent parsing:
 
 ## 😤 Challenges Faced
 
-### 1. Crafting Effective AI Prompts
-The biggest challenge was figuring out how to prompt Gemini to extract structured data from messy user input. Getting the AI to return clean JSON with location, price, and bedroom filters took a lot of trial and error. I had to be very specific in my prompts about the expected output format, and even then the AI would sometimes return unexpected responses that broke my parsing logic.
+### 1. Multi-Step Prompt Handling
+The chat required two separate AI calls per user message - first to extract filters (location, price, bedrooms) as JSON, then to generate a conversational response. Coordinating these sequential calls while maintaining conversation context required passing chat history to both prompts.
 
-### 2. Handling AI Failures Gracefully
-The AI doesn't always return what you expect. Sometimes it would hallucinate filters that weren't in the user's message, or miss obvious ones. I had to build a fallback system using regex that kicks in when the AI response can't be parsed. This taught me that you can't fully trust AI outputs - always have a backup plan.
+### 2. AI Response Parsing
+Gemini sometimes returned malformed JSON or hallucinated filters not present in the user's query. Built a regex fallback system that activates when AI parsing fails, ensuring the search still works even with unpredictable AI outputs.
 
-### 3. Merging Data from Multiple JSON Sources
-The property data was split across three separate JSON files (basics, characteristics, images). Writing the merge logic to join them by ID while handling missing records was tricky. I had to decide what to do when an image was missing or when characteristics didn't match - do I show the property with placeholder data or hide it entirely?
+### 3. Data Merging from Multiple Sources
+Property data was split across three JSON files (basics, characteristics, images). Created a merge utility that joins records by ID and handles missing data gracefully with defaults.
 
 ### 4. SPA Routing on GitHub Pages
-This one frustrated me for hours. My React app worked perfectly locally, but after deploying to GitHub Pages, refreshing any page except the homepage gave a 404 error. Turns out GitHub Pages doesn't support client-side routing out of the box. I had to add a `404.html` hack that redirects back to `index.html` with the route preserved in the URL.
+GitHub Pages doesn't support client-side routing - refreshing any route except `/` returns 404. Added a `404.html` redirect hack that preserves the URL path.
 
-### 5. CORS Configuration
-Getting the frontend (GitHub Pages) to talk to the backend (Heroku) was a headache. Every API call failed with CORS errors until I properly configured the Express CORS middleware. I learned the hard way that you need to handle preflight OPTIONS requests and set the right headers for credentials.
+### 5. Mongoose Async Hooks
+Password hashing with bcrypt in Mongoose pre-save hooks failed silently due to mixing callback and async/await patterns. Fixed by using pure async functions without the `next()` callback.
 
-### 6. Password Hashing with Mongoose Hooks
-Implementing bcrypt password hashing seemed simple until I hit async/await issues with Mongoose pre-save hooks. The hook kept failing silently because I was mixing callback syntax with async functions. Took me a while to realize Mongoose hooks have specific patterns for async operations.
+### 6. Filter State Synchronization
+Three different inputs (search bar, dropdowns, AI chat) all modify which properties display. Designed state management so these don't conflict - chat filters update the search bar, dropdowns stack on top.
 
-### 7. State Management for Real-Time Filtering
-Syncing the search bar, dropdown filters, and AI chat filters was complex. All three could modify which properties are displayed, and they needed to work together without conflicting. I had to carefully design the state flow so that typing in the search bar wouldn't reset dropdown selections and vice versa.
-
-### 8. Making the Chat Feel Natural
-The initial chat responses were robotic and didn't match the UI context. The AI would say "see below" when properties actually appear in the main grid, not below the chat. I had to add specific instructions in the prompt explaining the UI layout so the AI's responses made sense to users.
+### 7. Context-Aware AI Responses
+Initial AI responses said "see below" when properties actually appear in the main grid. Added UI context to the prompt so responses reference the correct location of filtered results.
