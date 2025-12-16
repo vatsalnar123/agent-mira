@@ -4,7 +4,7 @@ A full-stack real estate chatbot application that helps users find their dream h
 
 ## 🌐 Live Demo
 
-- **Frontend**: [https://vatsalnar123.github.io/agent-mira/](https://vatsalnar123.github.io/agent-mira/)
+- **Application**: [https://vatsalnar123.github.io/agent-mira/](https://vatsalnar123.github.io/agent-mira/)
 
 
 ## ✨ Features
